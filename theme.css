@@ -1,0 +1,35 @@
+GtkLabel#big_label1 {
+	font: Sans 20;
+}
+GtkLabel#mid_label {
+	font: Sans 35;
+}
+GtkLabel#huge_label1 {
+	font: Sans 90;
+}
+GtkLabel#cricket_hit_0 {
+	color: red;
+	font: 25;
+}
+GtkLabel#cricket_hit_1 {
+	color:brown;
+	font: 25;
+}
+GtkLabel#cricket_hit_2 {
+	color: #e67300;
+	font: 25;
+}
+GtkLabel#cricket_hit_3 {
+	color: green;
+	font: 25;
+}
+GtkLabel#cricket_player {
+	color: blue;
+	font: 30;
+}
+GtkLabel#round_score {
+	font: 25;
+}
+GtkButton:active {
+    color: red;
+}
