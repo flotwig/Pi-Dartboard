@@ -33,6 +33,10 @@ char top_pins[NUM_TOP_PINS] = {P_ORANGE, P_RED, P_BROWN, P_BLACK, P_WHITE, P_GRE
 #define NUM_BOTTOM_PINS 8
 char bottom_pins[NUM_BOTTOM_PINS] = {P_A, P_B, P_C, P_D, P_E, P_F, P_G, P_H};
 
+#define L_GREEN 2
+#define L_BLUE 3
+#define L_RED 4
+
 int dart = 1;
 int players = 1;
 void num_of_players_1(){players = 1;}
@@ -62,8 +66,11 @@ void start_score_901(){
 
 int current_shooter = 1;
 int first_dart = 0;
+char first_dart_print[10];
 int second_dart = 0;
+char second_dart_print[10];
 int third_dart = 0;
+char third_dart_print[10];
 int round_score = 0;
 
 int winner = 0;
@@ -86,6 +93,9 @@ int get_player_score(int player_num);
 void set_player_score(int player_num, int score);
 
 int calc_val(int top_pin, int bottom_pin){
+	gpioWrite(L_GREEN, 0);
+	gpioWrite(L_RED, 1);
+	system("aplay chaching.wav");
     if((bottom_pin == P_A) || (bottom_pin == P_B) || (bottom_pin == P_C) || (bottom_pin == P_D)){
         if(bottom_pin == P_A){
             in_out = INNER;
@@ -170,6 +180,8 @@ int calc_val(int top_pin, int bottom_pin){
 }
 
 int detect_hit(){
+	gpioWrite(L_RED, 0);
+	gpioWrite(L_GREEN, 1);
     if(gpioInitialise()< 0) {
         printf("setup failed !\n");
         return -1;
@@ -209,10 +221,13 @@ void dart_throw_01(){
         set_player_score(current_shooter, remaining_points);
         if(dart == 1){
             first_dart = throw_score;
+            sprintf(first_dart_print,"%d*%d ",multiplier,num_hit);
         }else if(dart == 2){
             second_dart = throw_score;
+            sprintf(second_dart_print,"%d*%d ",multiplier,num_hit);
         }else if(dart == 3){
             third_dart = throw_score;
+            sprintf(third_dart_print,"%d*%d ",multiplier,num_hit);
         }
         dart++;
         if (remaining_points == 0){
@@ -251,8 +266,11 @@ void end_of_turn_01(){
         current_shooter++;
     }
     first_dart = 0;
+    sprintf(first_dart_print,"%d",first_dart);
     second_dart = 0;
+    sprintf(second_dart_print,"%d",second_dart);
     third_dart = 0;
+    sprintf(third_dart_print,"%d",third_dart);
     round_score = 0;
     dart = 1;
     game_page_01();
@@ -265,8 +283,11 @@ void end_of_turn_cricket(){
         current_shooter++;
     }
     first_dart = 0;
+    sprintf(first_dart_print,"%d",first_dart);
     second_dart = 0;
+    sprintf(second_dart_print,"%d",second_dart);
     third_dart = 0;
+    sprintf(third_dart_print,"%d",third_dart);
     round_score = 0;
     dart = 1;
     game_page_cricket();
@@ -274,6 +295,19 @@ void end_of_turn_cricket(){
 
 
 void end_of_game(){
+	//Reinitialize variables for next game
+	gpioWrite(L_GREEN, 0);
+	gpioWrite(L_RED, 0);
+	gpioWrite(L_BLUE, 1);
+	dart = 0;
+	first_dart = 0;
+    sprintf(first_dart_print,"%d",first_dart);
+    second_dart = 0;
+    sprintf(second_dart_print,"%d",second_dart);
+    third_dart = 0;
+    sprintf(third_dart_print,"%d",third_dart);
+    round_score = 0;
+	
     GtkWidget *label, *grid, *button, *button_box;
 
     // Set up window
@@ -383,18 +417,18 @@ void game_page_01(){
     gtk_label_set_justify(GTK_LABEL(big_label), GTK_JUSTIFY_CENTER);
     gtk_grid_attach(GTK_GRID(grid), big_label, 1,4,4,1);
     gtk_widget_set_name(big_label, "big_label1");
-    sprintf(score,"%d",first_dart);
-    big_label = gtk_label_new(score);
+    //sprintf(score,"%d",first_dart);
+    big_label = gtk_label_new(first_dart_print);
     gtk_label_set_justify(GTK_LABEL(big_label), GTK_JUSTIFY_CENTER);
     gtk_grid_attach(GTK_GRID(grid), big_label, 1,5,1,1);
     gtk_widget_set_name(big_label, "big_label1");
-    sprintf(score,"%d",second_dart);
-    big_label = gtk_label_new(score);
+    //sprintf(score,"%d",second_dart);
+    big_label = gtk_label_new(second_dart_print);
     gtk_label_set_justify(GTK_LABEL(big_label), GTK_JUSTIFY_CENTER);
     gtk_grid_attach(GTK_GRID(grid), big_label, 2,5,1,1);
     gtk_widget_set_name(big_label, "big_label1");
-    sprintf(score,"%d",third_dart);
-    big_label = gtk_label_new(score);
+    //sprintf(score,"%d",third_dart);
+    big_label = gtk_label_new(third_dart_print);
     gtk_label_set_justify(GTK_LABEL(big_label), GTK_JUSTIFY_CENTER);
     gtk_grid_attach(GTK_GRID(grid), big_label, 3,5,1,1);
     gtk_widget_set_name(big_label, "big_label1");
@@ -434,10 +468,13 @@ void dart_throw_cricket(){
         //scores at top
         if (dart == 1) {
             first_dart = num_hit * multiplier;
+            sprintf(first_dart_print,"%d*%d",multiplier,num_hit);
         } else if (dart == 2) {
             second_dart = num_hit * multiplier;
+            sprintf(second_dart_print,"%d*%d",multiplier,num_hit);
         } else {
             third_dart = num_hit * multiplier;
+            sprintf(third_dart_print,"%d*%d",multiplier,num_hit);
         }
         round_score = round_score + num_hit * multiplier;
         dart++;
@@ -481,18 +518,18 @@ void game_page_cricket(){
     gtk_grid_attach(GTK_GRID(grid), label, 0,0,8,1);
     gtk_widget_set_name(label, "mid_label");
     char score[3];
-    sprintf(score,"%d",first_dart);
-    label = gtk_label_new(score);
+    //sprintf(score,"%d",first_dart);
+    label = gtk_label_new(first_dart_print);
     gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
     gtk_grid_attach(GTK_GRID(grid), label, 0,1,2,1);
     gtk_widget_set_name(label, "round_score");
-    sprintf(score,"%d",second_dart);
-    label = gtk_label_new(score);
+    //sprintf(score,"%d",second_dart);
+    label = gtk_label_new(second_dart_print);
     gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
     gtk_grid_attach(GTK_GRID(grid), label, 2,1,2,1);
     gtk_widget_set_name(label, "round_score");
-    sprintf(score,"%d",third_dart);
-    label = gtk_label_new(score);
+    //sprintf(score,"%d",third_dart);
+    label = gtk_label_new(third_dart_print);
     gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_CENTER);
     gtk_grid_attach(GTK_GRID(grid), label, 4,1,2,1);
     gtk_widget_set_name(label, "round_score");
@@ -698,6 +735,7 @@ void cricket(){
 }
 
 void game_type_window(){
+	gpioWrite(L_BLUE,0);
     GtkWidget *grid, *button, *button_box;
     
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -727,6 +765,20 @@ void game_type_window(){
 }
 
 int main(int argc, char *argv[]) {
+	if(gpioInitialise()< 0) {
+        printf("setup failed !\n");
+        return -1;
+    }
+	sprintf(first_dart_print,"%d",first_dart);
+	sprintf(second_dart_print,"%d",second_dart);
+	sprintf(third_dart_print,"%d",third_dart);
+	gpioSetMode(L_RED, PI_OUTPUT);
+	gpioSetMode(L_GREEN, PI_OUTPUT);
+	gpioSetMode(L_BLUE, PI_OUTPUT);
+	gpioWrite(L_RED, 0);
+	gpioWrite(L_GREEN, 0);
+	gpioWrite(L_BLUE, 0);
+	
     GtkWidget *button, *button_box;
     
     gtk_init(&argc,&argv);
