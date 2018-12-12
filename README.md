@@ -36,12 +36,23 @@ If you modify the code, you can use `./build.sh` to rebuild the `gui` executable
 ## Hardware Setup
 
 * [Raspberry Pi 3 Model B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
-* [HDMI 7" 800x480 Display](https://www.adafruit.com/product/2407)
+* [Adafruit HDMI 7" 800x480 Display](https://www.adafruit.com/product/2407)
 * [Arachnid Cricket Pro 670 Tournament-Quality Electronic Dartboard](https://www.walmart.com/ip/Arachnid-Cricket-Pro-670-Tournament-Quality-Electronic-Dartboard-with-15-5-Target-Area-and-Micro-Segment-Dividers-for-Higher-Scoring/26509524)
+* [Sparkfun Mono Audio Amp](https://www.sparkfun.com/products/11044)
+* [Sparkfun TRRS 3.5mm Jack Breakout](https://www.sparkfun.com/products/11570)
+* RGB LED
+* 3 x 330 ohm resistors (for LED)
+* Short 3.5mm audio cable to connect Pi to amplifier
+
+### Display & LED Hookup
 
 Connect the Pi to the HDMI display's HDMI and USB (for touch input).
 
-Now let's hook up the dartboard. Here's what the dartboard looks like from the back with the circuit removed and with the circuit board added:
+Connect the LED signal pins to GPIO 2, 3, and 4, and connect the last pin to ground.
+
+### Dartboard Hookup
+
+Here's what the dartboard looks like from the back with the circuit removed and with the circuit board added:
 
 |Without Circuit Board|With Circuit Board|
 |---------------------|------------------|
@@ -71,3 +82,29 @@ We connected the pins from the dartboard circuit to the corresponding GPIO pins 
 |Pinout Table|Raspberry Pi 3 Pinout|
 |------------|---------------------|
 |![Pi Pinout](/doc-images/pi-pinout.png)|![Raspberry Pi 3 Pinout](/doc-images/rpi-3-pinout.jpg)|
+
+### Speaker Hookup
+
+We'll re-use the existing speaker that's in the dartboard. You'll need to solder on new wires to the speaker's + and - hookups. Then, connect the audio amplifier and TRRS breakout board as follows:
+
+|Amplifier Pin|Connection|
+|----|----|
+|OUT +|Speaker +|
+|OUT -|Speaker -|
+|IN +|TRRS RING1 and TRRS TIP|
+|IN -|Pi Ground|
+|PWR -|Pi Ground|
+|PWR +|Pi 5V|
+
+|TRRS Breakout Pin|Connection|
+|----|----|
+|SLEEVE|Ground|
+|RING2|Not Connected|
+|RING1|Amp IN +|
+|TIP|Amp IN +|
+
+We connect the TRRS RING1 and TIP because together, they contain the left and right channels.
+
+Now, connect the Pi's 3.5mm output to the TRRS breakout board's 3.5mm jack.
+
+As a last step, ensure that the Pi's audio is set up to be routed over 3.5mm, not over HDMI. This varies by operating system and previous config so we will not cover it here.
