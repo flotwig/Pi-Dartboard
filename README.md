@@ -5,6 +5,8 @@ Pi Dartboard
 
 Team members: Kaitlin Burke, Kevin Hillinski, Sangwon Han, and Zach Bloomquist
 
+[Demo video](https://www.youtube.com/watch?v=EvW5r7207Lc&feature=youtu.be)
+
 ### Table of Contents
 1. [Project Idea](#Project-Idea)
 2. [Instructions](#Instructions)
@@ -28,10 +30,9 @@ We will also make a GUI for gameplay with buttons such as "Missed Dart" and "Nex
 2. Boot up your Raspberry Pi and open a terminal
 2. Clone [this Git repository](https://github.com/flotwig/Pi-Dartboard) to your Raspberry Pi to get set up with the code for this project:  
 `git clone https://github.com/flotwig/Pi-Dartboard.git`
-3. Run `./gui` to start the dartboard user interface.
+3. Run `./guitest` to start the dartboard user interface.
 
-
-If you modify the code, you can use `./build.sh` to rebuild the `gui` executable.
+If you modify the code, you can use `./build.sh` to rebuild the `guitest` executable.
 
 ## Hardware Setup
 
@@ -48,7 +49,7 @@ If you modify the code, you can use `./build.sh` to rebuild the `gui` executable
 
 Connect the Pi to the HDMI display's HDMI and USB (for touch input).
 
-Connect the LED signal pins to GPIO 2, 3, and 4, and connect the last pin to ground.
+Connect the LED signal pins to GPIO 2, 3, and 4 through 330ohm resistors and connect the last pin to ground.
 
 ### Dartboard Hookup
 
